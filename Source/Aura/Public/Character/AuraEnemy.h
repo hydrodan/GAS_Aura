@@ -7,6 +7,9 @@
 #include "Interaction/EnemyInterface.h"
 #include "AuraEnemy.generated.h" // this must be last
 
+// integer literal for edge highlighting, 250 is red
+#define CUSTOM_DEPTH_RED 250
+
 /**
  * 
  */
@@ -20,9 +23,9 @@ public:
 	AAuraEnemy();
 	virtual void HighlightActor() override;
 	virtual void UnhighlightActor() override;
-
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(BlueprintReadOnly)
-	bool bHighlighted = false;
+	//UPROPERTY(BlueprintReadOnly)
+	//bool bHighlighted = false;
+
 };
