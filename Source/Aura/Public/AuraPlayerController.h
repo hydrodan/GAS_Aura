@@ -19,6 +19,8 @@ class AURA_API AAuraPlayerController : public APlayerController
 public:
 	AAuraPlayerController();
 
+	virtual void PlayerTick(float DeltaTime) override;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -31,4 +33,10 @@ private:
 	TObjectPtr<class UInputAction> MoveAction;
 
 	void Move( const struct FInputActionValue& Input );
+
+	void CursorTrace();
+
+	// pointer wrappers to the interfaces the enemy is interacting with
+	TScriptInterface<class IEnemyInterface> _last_actor;
+	TScriptInterface<class IEnemyInterface> _this_actor;
 };

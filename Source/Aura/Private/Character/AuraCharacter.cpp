@@ -50,6 +50,7 @@ AAuraCharacter::AAuraCharacter()
 	GetCharacterMovement()->bConstrainToPlane = true;	// top-down visual setting
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;	// top-down visual setting
 
+	// keeps controller static
 	this->bUseControllerRotationPitch = false;
 	this->bUseControllerRotationRoll = false;
 	this->bUseControllerRotationYaw= false;
