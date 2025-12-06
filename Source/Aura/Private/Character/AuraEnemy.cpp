@@ -3,6 +3,8 @@
 
 #include "Character/AuraEnemy.h"
 #include "DrawDebugHelpers.h"
+#include "AbilitySystem/AuraAbilitySystemComponentBase.h"
+#include "AbilitySystem/AuraAttributeSet.h"
 
 AAuraEnemy::AAuraEnemy()
 {
@@ -16,6 +18,15 @@ AAuraEnemy::AAuraEnemy()
 	// this is from the PP_Highlight material; values >= 250 are highlighted
 	this->GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 	this->Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
+
+	// set up GAS components directly in the enemy character class
+	//   they are declared in AuraCharacterBase
+	this->AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponentBase>("AbilitySystemComponent");
+	this->AbilitySystemComponent->SetIsReplicated(true);
+	// Only replicate minimal gameplay effect info as this is an AI character
+	this->AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
+
+	this->AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
 }
 
 void AAuraEnemy::HighlightActor()
@@ -53,4 +64,14 @@ void AAuraEnemy::Tick(float DeltaTime)
 			1.f		// thickness
 		);
 	}*/
+}
+
+void AAuraEnemy::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// set up the ability system from the GAS interface
+	// because the enemy characters have a controller attached already, this is good for the GAS startup
+	// since this is an AI character, the Avatar and the Owner are both "this" object
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }

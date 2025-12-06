@@ -17,7 +17,14 @@ class AURA_API AAuraCharacter : public AAuraCharacterBase
 public:
 	AAuraCharacter();
 	
+	//~ Begin APawn Interface.
+	// Gameplay ability overrides
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
+	//~ End APawn Interface.
+
 protected:
+
 	UPROPERTY(EditAnywhere, Category="Camera")
 	TObjectPtr<class USpringArmComponent> _spring_arm_component;
 
@@ -26,4 +33,8 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> _static_mesh_component;
+
+private:
+	// helper function to set up Ability System Component; used by both client & server side
+	void InitAbilityActorInfo();
 };

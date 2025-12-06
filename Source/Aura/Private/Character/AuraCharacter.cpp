@@ -6,6 +6,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Player/AuraPlayerState.h"
+#include "AbilitySystem/AuraAbilitySystemComponentBase.h"
+#include "AbilitySystem/AuraAttributeSet.h"
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -54,7 +57,40 @@ AAuraCharacter::AAuraCharacter()
 	this->bUseControllerRotationPitch = false;
 	this->bUseControllerRotationRoll = false;
 	this->bUseControllerRotationYaw= false;
+}
 
-	// take control of the default player
-	//AutoPossessPlayer = EAutoReceiveInput::Player0;
+void AAuraCharacter::PossessedBy(AController* NewController)
+{
+	// this ensures the pawn has a controller (server side)
+	// gameplay ability system needs the controller attached (possessing) the pawn
+
+	// inherited from ACharacter
+	Super::PossessedBy(NewController);
+	
+	// Init ability actor info for the Server
+	InitAbilityActorInfo();
+}
+
+void AAuraCharacter::OnRep_PlayerState()
+{
+	// inherited from APawn
+	Super::OnRep_PlayerState();
+
+	// Init ability actor info for the Client
+	// OnRep_PlayerState ensures the player character has a controller attached
+	InitAbilityActorInfo();
+}
+
+void AAuraCharacter::InitAbilityActorInfo()
+{
+	// Init ability actor info for the player state
+	AAuraPlayerState* player_state = GetPlayerState<AAuraPlayerState>();
+	check(player_state);
+
+	// set the character's ability system component, inherited from AAuraCharacterBase
+	this->AbilitySystemComponent = player_state->GetAbilitySystemComponent();
+	this->AttributeSet = player_state->GetAttributeSet();
+
+	// in this case, the owner actor is the player state, and the avatar actor is the player object
+	this->AbilitySystemComponent->InitAbilityActorInfo(player_state, this);
 }
