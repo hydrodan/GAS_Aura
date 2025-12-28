@@ -1,0 +1,12 @@
+# in local directory with code, like after creating a new project
+# don't forget to add the .gitignore to ignore all the intermediate and build files
+git init
+git remote add origin https://github.com/username/reponame
+git add .
+git commit -m "initial commit"
+git branch -M main
+
+gh auth login   # then paste in the classic token made on github
+gh auth setup-git # modified the local ~/.gitconfig to store and use the token
+
+git push -u origin main   # to upload all the initial files, does a push upstream
